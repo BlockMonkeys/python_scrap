@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Django TDD Craw Project</title>
+</head>
+<body>
+    <h1>Naver Cafe Scrapping Project</h1>
+    <h3>k2020020 이한동</h3>
+    <h4>{{ msg }}</h4>
+    <form method="POST", action="craw/">{% csrf_token %}
+        <input name="maxPageNum" placeholder="순환할 페이지 넘버를 작성해주세요." type=number />
+        <input name="keyword" placeholder="키워드를 작성해주세요." type="text" />
+    <input type="submit" />
+    </form>
+</body>
+</html>

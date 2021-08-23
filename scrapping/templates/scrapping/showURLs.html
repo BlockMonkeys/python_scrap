@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+    <h1>URL 크롤링해온 URL 목록들 확인 페이지</h1>
+    <h3>사용자가 요청한 키워드 : {{ keyword }}</h3>
+    <h3>사용자가 요청한 Max-Page-Number : {{ maxPageNum }}</h3>
+    <h3>URL 목록</h3>
+    {#크롤링한 URL 목록들#}
+    {% for url in urls %}
+        <div>{{ url }}</div>
+    {% endfor %}
+
+    <h3>블로그 URL 목록</h3>
+    {% for urls in blogURLs %}
+        <div>{{ urls }}</div>
+    {% endfor %}
+
+    <a href="http://localhost:8000/scrap/">스크래핑 페이지 이동</a>
+</body>
+</html>

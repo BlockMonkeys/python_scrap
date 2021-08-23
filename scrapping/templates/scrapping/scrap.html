@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scrapping</title>
+</head>
+<body>
+    <h1>BLOG URLS 을 스크래핑 하자</h1>
+    <h2>Scrapping Results</h2>
+    <button onclick="{% url exportCSV %}">CSV파일로 추출하기</button>
+
+    {% for vals in blogContent.values %}
+        <h4>URL : {{ vals.url }}</h4>
+        <div><strong>콘텐츠 :</strong> {{ vals.content }}</div>
+    {% endfor %}
+
+</body>
+</html>
