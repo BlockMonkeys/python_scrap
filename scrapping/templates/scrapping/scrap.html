@@ -7,7 +7,7 @@
 <body>
     <h1>BLOG URLS 을 스크래핑 하자</h1>
     <h2>Scrapping Results</h2>
-    <button onclick="{% url exportCSV %}">CSV파일로 추출하기</button>
+    <a href="http://localhost:8000/export/">CSV파일 추출</a>
 
     {% for vals in blogContent.values %}
         <h4>URL : {{ vals.url }}</h4>

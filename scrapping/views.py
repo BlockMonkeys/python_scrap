@@ -116,11 +116,12 @@ def scrapPage(request):
     return render(request, 'scrapping/scrap.html', data)
 
 def exportCSV(request):
-    print(dict_blogDatas)
-    # #정리한 데이터를, csv파일로 추출
-    # with open(f'./csv/{userReqKeyword}.csv', "w") as csvfile:
-    #     datawriter = csv.writer(csvfile)
-    #     for key in dict_blogDatas.keys():
-    #         datawriter.writerow([key, dict_blogDatas[key]['url'], dict_blogDatas[key]['content']])
+    response = HttpResponse(
+        content_type='text/csv',
+        headers={'Content-Disposition': 'attachment; filename="crawData.csv"'},
+    )
+    writer = csv.writer(response)
+    for key in dict_blogDatas.keys():
+        writer.writerow([key, dict_blogDatas[key]['url'], dict_blogDatas[key]['content']])
 
-    return render(request)
+    return response

@@ -5,4 +5,5 @@ urlpatterns = [
     path('', views.index),
     path('craw/', views.crawPage),
     path('scrap/', views.scrapPage),
+    path('export/', views.exportCSV),
 ]
