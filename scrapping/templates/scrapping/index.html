@@ -4,14 +4,39 @@
     <meta charset="UTF-8">
     <title>Django TDD Craw Project</title>
 </head>
+    <style>
+        .userInputPage{
+            width: 80px;
+            padding: 10px;
+        }
+        .userInputKeyword{
+            width: 150px;
+            padding: 10px;
+        }
+    </style>
 <body>
+    <hr />
+
     <h1>Naver Cafe Scrapping Project</h1>
-    <h3>k2020020 이한동</h3>
+
+    <hr/>
+
+    <h2>1. 크롤링 👉🏻 스크래핑 👉🏻 CSV파일추출</h2>
     <h4>{{ msg }}</h4>
     <form method="POST", action="craw/">{% csrf_token %}
-        <input name="maxPageNum" placeholder="순환할 페이지 넘버를 작성해주세요." type=number />
-        <input name="keyword" placeholder="키워드를 작성해주세요." type="text" />
+        <input class="userInputPage" name="maxPageNum" placeholder="Max-Page" type=number />
+        <input class="userInputKeyword" name="keyword" placeholder="Keyword" type="text" />
     <input type="submit" />
+
+    <hr/>
+
+    <h2>2. 자연어처리 👉🏻 WordCloud 빈도분석 👉🏻 Pandas(Histogram + Bar)</h2>
+        <a href="http://localhost:8000/nlp/">스크래핑 페이지 이동</a>
+        {#   자연어처리     #}
+        {#    WordCloud빈도분석  #}
+        {#    Pandas활용   #}
     </form>
+
+    <hr />
 </body>
 </html>

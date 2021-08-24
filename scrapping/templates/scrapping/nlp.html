@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>NLP & Scrapping & Visualization</title>
+    <style>
+        .nlpResults{
+            font-size: 5px;
+        }
+        .second__column{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        .second__column__wordCount{
+            border: 1px solid black;
+            marginTop: 20px;
+            padding: 5px;
+        }
+        .second__column__wordCloud{
+            border: 1px solid black;
+            padding: 5px;
+        }
+        .second__column__subTitle{
+            font-size: 22px;
+            font-weight: 800;
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>자연어처리 & Wordcloud & Counter & Konlpy </h1>
+    <a href="http://localhost:8000/pandas/">Pandas분석</a>
+
+    <hr />
+
+    <h3>Konlpy NLP 자연어 처리 결과</h3>
+
+    <hr />
+    {% for items in nlpResult %}
+        <span class="nlpResults">{{ items }}</span>
+    {% endfor %}
+    <hr />
+
+    <h3>WordCloud 빈도수분석 & Counter</h3>
+    <hr />
+    <div class="second__column">
+        <div class="second__column__wordCloud">
+            <h4 class="second__column__subTitle">WordCloud 시각화</h4>
+            <img src="data:image/png;base64, {{ wordCloud }}"
+                 alt="wordCloudImage"
+                 height="600"
+                 width="600"
+            >
+        </div>
+        <div class="second__column__wordCount">
+            <h4 class="second__column__subTitle">Counter Top 100</h4>
+            {% for items in wordCount %}
+                <span style="margin: 20px;">{{ items }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <hr />
+
+    <div>
+        <h4>바그래프</h4>
+        <img src="data:image/png;base64, {{ pandasBar }}"
+            alt="pandasBar"
+            height="800"
+            width="100%"
+        >
+    </div>
+
+</body>
+</html>
