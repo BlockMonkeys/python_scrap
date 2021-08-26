@@ -1,28 +1,80 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pandas</title>
+    <style>
+        .pandas__homeBtn{
+            margin-top: 15px;
+            background-color: skyblue;
+            width: 150px;
+            height: 20px;
+            padding: 15px;
+            border-radius: 35px;
+            text-decoration: none;
+            color: black;
+            font-weight: 600;
+            text-align: center;
+        }
+        .pandas__header{
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .pandas__container{
+            display: flex;
+            justify-content: space-around;
+        }
+        .pandas__subTitle{
+            font-size: 25px;
+            font-weight: 600;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>판다스 분석하기</h1>
-    <div>
-        <h4>바그래프</h4>
-        <img src="data:image/png;base64, {{ bar }}"
-        alt="pandasBar"
-        height="800"
-        width="100%"
-        >
+    <div class="pandas__header">
+        <h1>판다스 분석</h1>
+        <a href="http://localhost:8000/" class="pandas__homeBtn">홈으로 돌아가기</a>
     </div>
-    <div>
-        <h4>히스토그램</h4>
-        <img src="data:image/png;base64, {{ hist }}"
-        alt="pandasBar"
-        height="800"
-        width="100%"
-        >
+
+    <hr />
+
+    <div class="pandas__container">
+
+        <div>
+            <h3 class="pandas__subTitle">Pandas Bar</h3>
+            <hr />
+            <img src="{% static 'pandas_bar.png' %}" alt="pandasBar" width="1000px" height="700px">
+        </div>
+
+        <div>
+            <h3 class="pandas__subTitle">Pandas 누운막대그래프 (Barh)</h3>
+            <hr />
+            <img src="{% static 'pandas_barh.png' %}" alt="pandasBar" width="1000px" height="700px">
+        </div>
+
     </div>
+
+    <hr />
+
+        <div class="pandas__container">
+            <div>
+                <h3 class="pandas__subTitle">Pandas Histogram</h3>
+                <hr />
+                <img src="{% static 'pandas_hist.png' %}" alt="pandasHist" width="700px" height="700px">
+            </div>
+
+            <div>
+                <h3 class="pandas__subTitle">Pandas Pie</h3>
+                <hr />
+                <img src="{% static 'pandas_pie.png' %}" alt="pandasHist" width="700px" height="700px">
+            </div>
+        </div>
+    <hr />
+
 
 </body>
 </html>

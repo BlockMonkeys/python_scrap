@@ -3,12 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Scrapping | k2020020</title>
+    <style>
+        .btn{
+            margin-top: 15px;
+            background-color: skyblue;
+            width: 150px;
+            height: 20px;
+            padding: 15px;
+            border-radius: 35px;
+            text-decoration: none;
+            color: black;
+            font-weight: 600;
+            text-align: center;
+        }
+        .btn:hover{
+            box-shadow: 1px 1px 1px gray;
+            cursor: pointer;
+            font-weight: 800;
+        }
+        .line{
+            margin-top: 35px;
+        }
+    </style>
 </head>
 <body>
     <h1>Scrapping Results</h1>
-    <a href="http://localhost:8000/export/">CSV파일 추출</a>
+    <a href="http://localhost:8000/export/" class="btn">CSV파일 추출</a>
+    <a href="http://localhost:8000/nlp/" class="btn">데이터분석 결과보기 (NLP -> WordCloud)</a>
 
-    <hr/>
+    <hr class="line" />
 
     {% for vals in blogContent.values %}
         <h4>URL : {{ vals.url }}</h4>

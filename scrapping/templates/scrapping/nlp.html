@@ -1,4 +1,5 @@
 <!doctype html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,12 +17,6 @@
             justify-content: space-around;
         }
         .second__column__wordCount{
-            border: 1px solid black;
-            marginTop: 20px;
-            padding: 5px;
-        }
-        .second__column__wordCloud{
-            border: 1px solid black;
             padding: 5px;
         }
         .second__column__subTitle{
@@ -29,16 +24,55 @@
             font-weight: 800;
             text-align: center;
         }
+        .third__column__subTitle{
+            font-size: 22px;
+            font-weight: 800;
+            text-align: center;
+        }
+        .nlp__homeBtn{
+            margin-top: 15px;
+            background-color: skyblue;
+            width: 150px;
+            height: 20px;
+            padding: 15px;
+            border-radius: 35px;
+            text-decoration: none;
+            color: black;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .nlp__homeBtn:hover{
+            box-shadow: 1px 1px 1px gray;
+            cursor: pointer;
+            font-weight: 800;
+        }
+        .nlp__header{
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .nlp__subTitle{
+            font-size: 22px;
+            font-weight: 800;
+            text-align: center;
+        }
+        .second__column__textContent{
+            font-size: 18px;
+            font-weight: 500;
+        }
     </style>
 
 </head>
 <body>
-    <h1>자연어처리 & Wordcloud & Counter & Konlpy </h1>
-    <a href="http://localhost:8000/pandas/">Pandas분석</a>
-
+    <div class="nlp__header">
+        <h1>Data Anlyzation Result</h1>
+        <a href="http://localhost:8000/" class="nlp__homeBtn">홈으로 돌아가기</a>
+        <a href="http://localhost:8000/pandas" class="nlp__homeBtn">판다스 보기</a>
+    </div>
     <hr />
 
-    <h3>Konlpy NLP 자연어 처리 결과</h3>
+    <h3 class="nlp__subTitle">Konlpy NLP 자연어 처리 결과</h3>
 
     <hr />
     {% for items in nlpResult %}
@@ -46,35 +80,31 @@
     {% endfor %}
     <hr />
 
-    <h3>WordCloud 빈도수분석 & Counter</h3>
+    <h3 class="nlp__subTitle">WordCloud 빈도수분석 & Counter</h3>
     <hr />
     <div class="second__column">
         <div class="second__column__wordCloud">
             <h4 class="second__column__subTitle">WordCloud 시각화</h4>
-            <img src="data:image/png;base64, {{ wordCloud }}"
+            <img src="{% static 'wordcloud_result.png' %}" alt="pandasBar" width="600" height="600">
+            
+            <!-- <img src="data:image/png;base64, {{ wordCloud }}"
                  alt="wordCloudImage"
                  height="600"
                  width="600"
-            >
+            > -->
         </div>
+    </div>
+
+    <div class="third__column">
         <div class="second__column__wordCount">
-            <h4 class="second__column__subTitle">Counter Top 100</h4>
+            <hr />
+            <h4 class="third__column__subTitle">Counter Top 100</h4>
             {% for items in wordCount %}
-                <span style="margin: 20px;">{{ items }}</span>
+                <div class="second__column__textContent">{{ items }}</div>
             {% endfor %}
         </div>
     </div>
-
     <hr />
-
-    <div>
-        <h4>바그래프</h4>
-        <img src="data:image/png;base64, {{ pandasBar }}"
-            alt="pandasBar"
-            height="800"
-            width="100%"
-        >
-    </div>
 
 </body>
 </html>

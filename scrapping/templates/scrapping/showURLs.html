@@ -2,7 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>URL Crawling | k2020020</title>
+    <title>URL Crawling</title>
+    <style>
+        .btn{
+            margin-top: 15px;
+            background-color: skyblue;
+            width: 150px;
+            height: 20px;
+            padding: 15px;
+            border-radius: 35px;
+            text-decoration: none;
+            color: black;
+            font-weight: 600;
+            text-align: center;
+        }
+        .btn:hover{
+            box-shadow: 1px 1px 1px gray;
+            cursor: pointer;
+            font-weight: 800;
+        }
+        .line{
+            margin-bottom: 25px;
+        }
+    </style>
 </head>
 <body>
     <h1>URL Crawling</h1>
@@ -23,8 +45,8 @@
         <div>{{ urls }}</div>
     {% endfor %}
 
-    <hr />
+    <hr class="line"/>
 
-    <a href="http://localhost:8000/scrap/">스크래핑 페이지 이동</a>
+    <a href="http://localhost:8000/scrap/" class="btn">다음 단계로 이동하기</a>
 </body>
 </html>

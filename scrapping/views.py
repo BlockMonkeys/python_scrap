@@ -124,18 +124,25 @@ def scrapPage(request):
             "content": blogs[1],
         }
 
+    # 파일다운로드 자동으로 해야함.
+    myFilePathforCrawling = "./csv/crawData.csv"
+    with open(myFilePathforCrawling, "w", newline="") as csvfile:
+        dataWriter = csv.writer(csvfile, delimiter=",")
+        for key, val in dict_blogDatas.items():
+            dataWriter.writerow([key, dict_blogDatas[key]['url'], dict_blogDatas[key]['content']])
+
     data = {
         "blogContent": dict_blogDatas
     }
 
     return render(request, 'scrapping/scrap.html', data)
 
-#데이터 CSV파일로 추출하기 scrap페이지에 버튼용 함수 (화면 랜더링 X)
+#크롤링 데이터는 자동이지만, CSV파일을 추출하고 싶을 경우 사용할 버튼용 함수
 def exportCSV(request):
-    #with open으로 작동하려했으나, 잘 안되어 Django 공식홈페이지에서 힌트를 얻음.
+    #크롤링한 데이터를 CSV파일로 추출하고 싶을 경우 버튼으로 할 수 있도록.
     response = HttpResponse(
         content_type='text/csv',
-        headers={'Content-Disposition': 'attachment; filename=crawData.csv'},
+        headers={'Content-Disposition': 'attachment; filename=userData.csv'},
     )
     writer = csv.writer(response)
     for key in dict_blogDatas.keys():
@@ -147,7 +154,7 @@ def exportCSV(request):
 def konlpy(request):
     #Konlpy & Mecap
     tempResult = []
-    myFile = "./csv/data.csv"
+    myFile = "./csv/crawData.csv"
     with open(myFile, newline="") as csvfile:
         dataReader = csv.reader(csvfile, delimiter=",")
         for row in dataReader:
@@ -157,10 +164,10 @@ def konlpy(request):
     nlpResult = [i for i in tempResult if len(i)>1]
 
     
-    ##WORDCLOUD & COUNTER
+    ## WORDCLOUD & COUNTER
 
     #나만의 STOPWORD LIST로 단어 거르기.
-    my_stopword_list = ["미국", "넷플릭스", "원작", "촬영", "장르", "배경", "분위기", "배우", "감독","내용","때문", "요즘", "우리", "생각", "사용", "뭔가", "저희", "영화", "액션", "드라마", "공포", "주인공", "작품", "스토리", "가족"]
+    my_stopword_list = ["환갑", "선물", "제품", "남자", "어머니", "아버지", "때문", "우리", "나이", "관리", "생각", "부모", "정도","환갑", "제품", "도움" "우리", "가족", "엄마", "아빠", "선물", "부분", "마음", "사용", "요즘", "반전", "저희", "아버지", "어버이날", "구입", "후기"]
     for i, word in enumerate(my_stopword_list):
         STOPWORDS.add(my_stopword_list[i])
 
@@ -176,17 +183,65 @@ def konlpy(request):
                    ).generate(klines)
     plt.figure(figsize=(12,12))
     plt.axis("off")
-    plt.imshow(wc)
-    fig = plt.gcf()
-    buf = io.BytesIO()
-    fig.savefig(buf, format="png")
-    buf.seek(0)
-    string = base64.b64encode((buf.read()))
-    uri = urllib.parse.quote((string))
+    plt.imshow(wc, interpolation="bilinear")
 
-    print("buf", string)
+    wc.to_file("scrapping/static/wordcloud_result.png")
 
-    #판다스 Bar
+    #빈도수 Counter 순위 100개까지만 담도록 함. (TOP 100 출력용.)
+    #? class."collections.Counter"는 무슨 자료형일까..? 
+    resultCountWords = Counter(nlpResult).most_common(n=100)
+
+    #Make Counter CSV (판다스 분석용, 모든 데이터를 가지고 함.)
+    counter_data = Counter(nlpResult)
+
+    #Counter TOP 100 출력을 쉽게 하기 위해 배열로 바꾸어줌.
+    tempAry = []
+    for idx, val in enumerate(resultCountWords):
+        word = f"Rank {idx+1}: {val[0]} -> {val[1]}회"
+        tempAry.append(word)
+
+    myFilePathforCSVPandas = "./csv/dataForPandas.csv"
+    #카운트용 CSV 재생성 파일명 = dataForPandas , Count가 10번 이상 나온 것만 생성함.
+    with open(myFilePathforCSVPandas, "w", newline="") as csvfile:
+        dataWriter = csv.writer(csvfile, delimiter=",")
+        dataWriter.writerow(["keyword", "count"])
+        for key, val in counter_data.items():
+            if val > 10:
+                dataWriter.writerow([key, val])
+            else:
+                continue
+
+    data = {
+        "nlpResult": nlpResult,
+        "wordCount": tempAry,
+    }
+
+    return render(request, 'scrapping/nlp.html', data)
+
+#Pandas 를 활용한 데이터 시각화
+def pandas(request):
+    #plt 초기화 명령 plt.clf();
+    plt.clf()
+
+    myFilePath = "./csv/dataForPandas.csv"
+    font_Path = "/Library/Fonts/Arial Unicode.ttf"
+    font_Name = fm.FontProperties(fname=font_Path).get_name()
+    matplotlib.rc("font", family=font_Name)
+
+    df = pd.read_csv(myFilePath)
+    
+    #PANDAS 바
+    x = df['keyword']
+    y = df['count']
+
+    plt.bar(x, y, alpha=0.5, width=0.3)
+    
+    #Save
+    plt.savefig("/Users/handonglee/Desktop/lab/coding/python/scrapPy_2021_8/scrapPy/scrapping/static/pandas_bar.png")
+
+    ##PANDAS 누운막대그래프
+    plt.clf()
+
     myFilePath = "./csv/dataForPandas.csv"
     font_Path = "/Library/Fonts/Arial Unicode.ttf"
     font_Name = fm.FontProperties(fname=font_Path).get_name()
@@ -197,78 +252,43 @@ def konlpy(request):
     x = df['keyword']
     y = df['count']
 
-    plt.bar(x, y)
-    fig = plt.gcf()
-    buf = io.BytesIO()
-    fig.savefig(buf, format="png")
-    buf.seek(0)
-    string = base64.b64encode((buf.read()))
-    pandasBar = urllib.parse.quote((string))
-    print("buf2", string)
-
-    #빈도수 Counter
-    #? class."collections.Counter"는 무슨 자료형일까..?
-    resultCountWords = Counter(nlpResult).most_common(n=100)
+    plt.barh(x, y)
+    plt.savefig("/Users/handonglee/Desktop/lab/coding/python/scrapPy_2021_8/scrapPy/scrapping/static/pandas_barh.png")
 
 
-    #Make Counter CSV (판다스 분석용)
-    counter_data = Counter(nlpResult)
+    ## PANDAS HIST
+    plt.clf()
+    myFilePath = "./csv/dataForPandas.csv"
+    font_Path = "/Library/Fonts/Arial Unicode.ttf"
+    font_Name = fm.FontProperties(fname=font_Path).get_name()
+    matplotlib.rc("font", family=font_Name)
 
+    df = pd.read_csv(myFilePath)
 
-    myFilePathforCSVPandas = "./csv/dataForPandas.csv"
+    plt.hist(y, bins=3)
+    plt.savefig("/Users/handonglee/Desktop/lab/coding/python/scrapPy_2021_8/scrapPy/scrapping/static/pandas_hist.png")
+    
 
-    #카운트가 20개이상인 것만 CSV로 저장하도록 (안그러면 항목이 너무 많음.)
-    with open(myFilePathforCSVPandas, "w", newline="") as csvfile:
-        dataWriter = csv.writer(csvfile, delimiter=",")
-        dataWriter.writerow(["keyword", "count"])
-        for key, val in counter_data.items():
-            if val > 3:
-                dataWriter.writerow([key, val])
-            else:
-                continue
+    #PANDAS Pie Chart
+    plt.clf()
+
+    myFilePath = "./csv/dataForPandas.csv"
+    font_Path = "/Library/Fonts/Arial Unicode.ttf"
+    font_Name = fm.FontProperties(fname=font_Path).get_name()
+    matplotlib.rc("font", family=font_Name)
+
+    labels = df['keyword']
+    y = df['count']
+
+    plt.pie(y, labels=labels, autopct='%.1f%%')
+
+    plt.savefig("/Users/handonglee/Desktop/lab/coding/python/scrapPy_2021_8/scrapPy/scrapping/static/pandas_pie.png")
+    
 
     data = {
-        "nlpResult": nlpResult,
-        "wordCloud": uri,
-        "wordCount": resultCountWords,
-        "pandasBar": pandasBar
+        "bar": "hi",
+        # "hist": pandasHist,
     }
-
-    return render(request, 'scrapping/nlp.html', data)
-
-
-# def pandas(request):
-#     # myFilePath = "./csv/dataForPandas.csv"
-#     # font_Path = "/Library/Fonts/Arial Unicode.ttf"
-#     # font_Name = fm.FontProperties(fname=font_Path).get_name()
-#     # matplotlib.rc("font", family=font_Name)
-
-#     # df = pd.read_csv(myFilePath)
     
-#     # #PANDAS 바
-#     # x = df['keyword']
-#     # y = df['count']
+    return render(request, 'scrapping/pandas.html', data)
 
-#     # plt.bar(x, y)
-#     # fig = plt.gcf()
-#     # buf = io.BytesIO()
-#     # fig.savefig(buf, format="png")
-#     # buf.seek(0)
-#     # string = base64.b64encode((buf.read()))
-#     # pandasBar = urllib.parse.quote((string))
-
-#     #히스토그램
-#     # plt.hist(y, bins=3)
-#     # fig = plt.gcf()
-#     # buf = io.BytesIO()
-#     # fig.savefig(buf, format="png")
-#     # buf.seek(0)
-#     # string = base64.b64encode((buf.read()))
-#     # pandasHist = urllib.parse.quote((string))
-
-#     data = {
-#         "bar": pandasBar,
-#         # "hist": pandasHist,
-#     }
-    
-#     return render(request, 'scrapping/pandas.html', data)

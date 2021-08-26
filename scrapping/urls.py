@@ -7,5 +7,5 @@ urlpatterns = [
     path('scrap/', views.scrapPage),
     path('export/', views.exportCSV),
     path('nlp/', views.konlpy),
-    # path('pandas/', views.pandas),
+    path('pandas/', views.pandas),
 ]
